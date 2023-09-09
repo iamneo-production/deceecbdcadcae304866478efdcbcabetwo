@@ -1,65 +1,55 @@
-const cells = document.querySelectorAll('[data-cell]');
-const resultText = document.getElementById('result');
-const resetBtn = document.getElementById('reset-btn');
+let turn = "X"
+let isgameover = false;
 
-let currentPlayer = 'X';
-let board = ['', '', '', '', '', '', '', '', ''];
-let gameActive = true;
-
-// Check if a player has won
-const checkWin = () => {
-const winPatterns = [
-[0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-[0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-[0, 4, 8], [2, 4, 6]             // Diagonals
-];
-
-for (const pattern of winPatterns) {
-const [a, b, c] = pattern;
-if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-gameActive = false;
-resultText.textContent = `Player ${currentPlayer} wins!`;
-resetBtn.disabled = false;
-return;
-}
+const changeTurn = ()=>{
+return turn === "X"? "0": "X"
 }
 
-if (!board.includes('')) {
-gameActive = false;
-resultText.textContent = 'It\'s a draw!';
-resetBtn.disabled = false;
+const checkWin = ()=>{
+let boxtext = document.getElementsByClassName('boxtext');
+let wins = [
+[0, 1, 2, 5, 5, 0],
+[3, 4, 5, 5, 15, 0],
+[6, 7, 8, 5, 25, 0],
+[0, 3, 6, -5, 15, 90],
+[1, 4, 7, 5, 15, 90],
+[2, 5, 8, 15, 15, 90],
+[0, 4, 8, 5, 15, 45],
+[2, 4, 6, 5, 15, 135],
+]
+wins.forEach(e =>{
+if((boxtext[e[0]].innerText === boxtext[e[1]].innerText) && (boxtext[e[2]].innerText === boxtext[e[1]].innerText) && (boxtext[e[0]].innerText !== "") ){
+document.querySelector('.info').innerText = boxtext[e[0]].innerText + " Won"
+isgameover = true
+document.querySelector(".line").style.transform = `translate(${e[3]}vw, ${e[4]}vw) rotate(${e[5]}deg)`
+document.querySelector(".line").style.width = "20vw";
 }
-};
+})
+}
 
-// Handle cell click event
-const handleCellClick = (e) => {
-const cell = e.target;
-const cellIndex = cell.dataset.cell;
-
-if (board[cellIndex] === '' && gameActive) {
-cell.textContent = currentPlayer;
-board[cellIndex] = currentPlayer;
+let boxes = document.getElementsByClassName("box");
+Array.from(boxes).forEach(element =>{
+let boxtext = element.querySelector('.boxtext');
+element.addEventListener('click', ()=>{
+if(boxtext.innerText === ''){
+boxtext.innerText = turn;
+turn = changeTurn();
 checkWin();
-currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-resultText.textContent = `Player ${currentPlayer}'s Turn`;
+if (!isgameover){
+document.getElementsByClassName("info")[0].innerText  = "Turn for " + turn;
+} 
 }
-};
+})
+})
 
-// Add click event listeners to cells
-cells.forEach(cell => {
-cell.addEventListener('click', handleCellClick);
+reset.addEventListener('click', ()=>{
+let boxtexts = document.querySelectorAll('.boxtext');
+Array.from(boxtexts).forEach(element => {
+element.innerText = ""
 });
-
-// Reset the game
-const resetGame = () => {
-currentPlayer = 'X';
-board = ['', '', '', '', '', '', '', '', ''];
-gameActive = true;
-resultText.textContent = `Player ${currentPlayer}'s Turn`;
-cells.forEach(cell => {
-cell.textContent = '';
-});
-resetBtn.disabled = true;
-};
-
-resetBtn.addEventListener('click', resetGame);
+turn = "X"; 
+isgameover = false
+document.querySelector(".line").style.width = "0vw";
+document.getElementsByClassName("info")[0].innerText  = "Turn for " + turn;
+document.querySelector('.imgbox').getElementsByTagName('img')[0].style.width = "0px"
+})
