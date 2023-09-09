@@ -1,72 +1,65 @@
-let playerText = document.getElementById('playerText')
-let restartBtn = document.getElementById('restartBtn')
-let boxes = Array.from(document.getElementsByClassName('box'))
+const cells = document.querySelectorAll('[data-cell]');
+const resultText = document.getElementById('result');
+const resetBtn = document.getElementById('reset-btn');
 
-let winnerIndicator = getComputedStyle(document.body).getPropertyValue('--winning-blocks')
+let currentPlayer = 'X';
+let board = ['', '', '', '', '', '', '', '', ''];
+let gameActive = true;
 
-const O_TEXT = "O"
-const X_TEXT = "X"
-let currentPlayer = X_TEXT
-let spaces = Array(9).fill(null)
+// Check if a player has won
+const checkWin = () => {
+const winPatterns = [
+[0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+[0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+[0, 4, 8], [2, 4, 6]             // Diagonals
+];
 
-const startGame = () => {
-boxes.forEach(box => box.addEventListener('click', boxClicked))
-}
-
-function boxClicked(e) {
-const id = e.target.id
-
-if(!spaces[id]){
-spaces[id] = currentPlayer
-e.target.innerText = currentPlayer
-
-if(playerHasWon() !==false){
-playerText.innerHTML = `${currentPlayer} has won!`
-let winning_blocks = playerHasWon()
-
-winning_blocks.map( box => boxes[box].style.backgroundColor=winnerIndicator)
-return
-}
-
-currentPlayer = currentPlayer == X_TEXT ? O_TEXT : X_TEXT
+for (const pattern of winPatterns) {
+const [a, b, c] = pattern;
+if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+gameActive = false;
+resultText.textContent = `Player ${currentPlayer} wins!`;
+resetBtn.disabled = false;
+return;
 }
 }
 
-const winningCombos = [
-[0,1,2],
-[3,4,5],
-[6,7,8],
-[0,3,6],
-[1,4,7],
-[2,5,8],
-[0,4,8],
-[2,4,6]
-]
-
-function playerHasWon() {
-for (const condition of winningCombos) {
-let [a, b, c] = condition
-
-if(spaces[a] && (spaces[a] == spaces[b] && spaces[a] == spaces[c])) {
-return [a,b,c]
+if (!board.includes('')) {
+gameActive = false;
+resultText.textContent = 'It\'s a draw!';
+resetBtn.disabled = false;
 }
+};
+
+// Handle cell click event
+const handleCellClick = (e) => {
+const cell = e.target;
+const cellIndex = cell.dataset.cell;
+
+if (board[cellIndex] === '' && gameActive) {
+cell.textContent = currentPlayer;
+board[cellIndex] = currentPlayer;
+checkWin();
+currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+resultText.textContent = `Player ${currentPlayer}'s Turn`;
 }
-return false
-}
+};
 
-restartBtn.addEventListener('click', restart)
+// Add click event listeners to cells
+cells.forEach(cell => {
+cell.addEventListener('click', handleCellClick);
+});
 
-function restart() {
-spaces.fill(null)
+// Reset the game
+const resetGame = () => {
+currentPlayer = 'X';
+board = ['', '', '', '', '', '', '', '', ''];
+gameActive = true;
+resultText.textContent = `Player ${currentPlayer}'s Turn`;
+cells.forEach(cell => {
+cell.textContent = '';
+});
+resetBtn.disabled = true;
+};
 
-boxes.forEach( box => {
-box.innerText = ''
-box.style.backgroundColor=''
-})
-
-playerText.innerHTML = 'Tic Tac Toe'
-
-currentPlayer = X_TEXT
-}
-
-startGame()
+resetBtn.addEventListener('click', resetGame);
