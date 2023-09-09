@@ -9,76 +9,68 @@ background-position: center center;
 font-family: "Radio Canada", sans-serif;
 }
 
-body{
-padding: 5%;
-}
-.gameContainer{ 
-display: flex;
-justify-content: center;
-margin-top: 50px;
+*{
+padding: 0;
+margin: 0;
+box-sizing: border-box;
 }
 
-.container{
-display: grid;
-grid-template-rows: repeat(3, 10vw);
-grid-template-columns: repeat(3, 10vw);
-font-family: 'Roboto', sans-serif;
-position: relative;
+:root {
+--orange: #F2C14E;
+--winning-blocks: #2d414b;
 }
 
-.box{
-border: 2px solid black;
-font-size: 8vw;
-cursor: pointer;
+
+h1 {
+font-size: 54px;
+text-transform: uppercase;
+}
+
+.container {
+padding: 40px;
+height: 100vh;
 display: flex;
 justify-content: center;
 align-items: center;
+flex-direction: column;
+
 }
 
-.box:hover{
-background-color: rgb(239, 209, 237);
+#gameboard {
+width: 300px;
+display: flex;
+flex-wrap: wrap;
+margin-top: 40px;
 }
-
-.info {
-font-size: 22px;
+.box {
+height: 100px;
+width: 100px;
+display: flex;
+align-items: center;
+justify-content: center;
+color: var(--orange);
+font-size: 120px;
+border-right: 2px solid;
+border-bottom: 2px solid;
 }
-
-.gameInfo{
-padding: 0 34px;
+.box:nth-child(3n) {
+border-right: none;
 }
-
-.gameInfo h1{
-font-size: 2.5rem;
+.box:nth-child(6) ~ .box {
+border-bottom: none;
+} 
+button {
+padding: 10px 20px;
+border-radius: 10px;
+background-color: var(--orange);
+color: #333;
+border-color: var(--orange);
+font-size: 18px;
+transition: 200ms transform;
+font-weight: 600;
 }
-
-.br-0{
-border-right: 0;
-}
-
-.bl-0{
-border-left: 0;
-}
-
-.bt-0{
-border-top: 0;
-}
-
-.bb-0{
-border-bottom: 0;
-}
-
-#reset {
-margin: 0 23px;
-padding: 3%;
-background: #cac7d2;
-border-radius: 6px;
+button:hover {
 cursor: pointer;
-font-size: 15px;
+transform: translateY(-2px);
 }
 
-.line{
-background-color: brown;
-height: 3px;
-width: 0;
-position: absolute;
-}

@@ -1,55 +1,72 @@
-let turn = "X"
-let isgameover = false;
+let playerText = document.getElementById('playerText')
+let restartBtn = document.getElementById('restartBtn')
+let boxes = Array.from(document.getElementsByClassName('box'))
 
-const changeTurn = ()=>{
-return turn === "X"? "0": "X"
+let winnerIndicator = getComputedStyle(document.body).getPropertyValue('--winning-blocks')
+
+const O_TEXT = "O"
+const X_TEXT = "X"
+let currentPlayer = X_TEXT
+let spaces = Array(9).fill(null)
+
+const startGame = () => {
+boxes.forEach(box => box.addEventListener('click', boxClicked))
 }
 
-const checkWin = ()=>{
-let boxtext = document.getElementsByClassName('boxtext');
-let wins = [
-[0, 1, 2, 5, 5, 0],
-[3, 4, 5, 5, 15, 0],
-[6, 7, 8, 5, 25, 0],
-[0, 3, 6, -5, 15, 90],
-[1, 4, 7, 5, 15, 90],
-[2, 5, 8, 15, 15, 90],
-[0, 4, 8, 5, 15, 45],
-[2, 4, 6, 5, 15, 135],
+function boxClicked(e) {
+const id = e.target.id
+
+if(!spaces[id]){
+spaces[id] = currentPlayer
+e.target.innerText = currentPlayer
+
+if(playerHasWon() !==false){
+playerText.innerHTML = `${currentPlayer} has won!`
+let winning_blocks = playerHasWon()
+
+winning_blocks.map( box => boxes[box].style.backgroundColor=winnerIndicator)
+return
+}
+
+currentPlayer = currentPlayer == X_TEXT ? O_TEXT : X_TEXT
+}
+}
+
+const winningCombos = [
+[0,1,2],
+[3,4,5],
+[6,7,8],
+[0,3,6],
+[1,4,7],
+[2,5,8],
+[0,4,8],
+[2,4,6]
 ]
-wins.forEach(e =>{
-if((boxtext[e[0]].innerText === boxtext[e[1]].innerText) && (boxtext[e[2]].innerText === boxtext[e[1]].innerText) && (boxtext[e[0]].innerText !== "") ){
-document.querySelector('.info').innerText = boxtext[e[0]].innerText + " Won"
-isgameover = true
-document.querySelector(".line").style.transform = `translate(${e[3]}vw, ${e[4]}vw) rotate(${e[5]}deg)`
-document.querySelector(".line").style.width = "20vw";
+
+function playerHasWon() {
+for (const condition of winningCombos) {
+let [a, b, c] = condition
+
+if(spaces[a] && (spaces[a] == spaces[b] && spaces[a] == spaces[c])) {
+return [a,b,c]
 }
-})
+}
+return false
 }
 
-let boxes = document.getElementsByClassName("box");
-Array.from(boxes).forEach(element =>{
-let boxtext = element.querySelector('.boxtext');
-element.addEventListener('click', ()=>{
-if(boxtext.innerText === ''){
-boxtext.innerText = turn;
-turn = changeTurn();
-checkWin();
-if (!isgameover){
-document.getElementsByClassName("info")[0].innerText  = "Turn for " + turn;
-} 
-}
-})
+restartBtn.addEventListener('click', restart)
+
+function restart() {
+spaces.fill(null)
+
+boxes.forEach( box => {
+box.innerText = ''
+box.style.backgroundColor=''
 })
 
-reset.addEventListener('click', ()=>{
-let boxtexts = document.querySelectorAll('.boxtext');
-Array.from(boxtexts).forEach(element => {
-element.innerText = ""
-});
-turn = "X"; 
-isgameover = false
-document.querySelector(".line").style.width = "0vw";
-document.getElementsByClassName("info")[0].innerText  = "Turn for " + turn;
-document.querySelector('.imgbox').getElementsByTagName('img')[0].style.width = "0px"
-})
+playerText.innerHTML = 'Tic Tac Toe'
+
+currentPlayer = X_TEXT
+}
+
+startGame()
