@@ -1,34 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Tic Tac Toe</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
+<title>Tic Tac Toe</title>
 </head>
 <body>
-<header>
 <h1>Tic Tac Toe</h1>
-</header>
-<div class="box">
-<div class="row">
-<input type="button" class="btn" value="1" disabled>
-<input type="button" class="btn" value="2" disabled>
-<input type="button" class="btn" value="3" disabled>
+<div class="game-container">
+<div class="result-container">
+<p id="result">Player X's Turn</p>
 </div>
-<div class="row">
-<input type="button" class="btn" value="4" disabled>
-<input type="button" class="btn" value="5" disabled>
-<input type="button" class="btn" value="6" disabled>
+<div class="board">
+<!-- The 3x3 grid -->
+<div class="cell" data-cell></div>
+<div class="cell" data-cell></div>
+<div class="cell" data-cell></div>
+<div class="cell" data-cell></div>
+<div class="cell" data-cell></div>
+<div class="cell" data-cell></div>
+<div class="cell" data-cell></div>
+<div class="cell" data-cell></div>
+<div class="cell" data-cell></div>
 </div>
-<div class="row">
-<input type="button" class="btn" value="7" disabled>
-<input type="button" class="btn" value="8" disabled>
-<input type="button" class="btn" value="9" disabled>
+<button id="reset-btn" disabled>Reset</button>
 </div>
-</div>
-<div class="result">
-<p id="result"></p>
-</div>
-<button id="reset">Reset</button>
 <script src="script.js"></script>
 </body>
 </html>
